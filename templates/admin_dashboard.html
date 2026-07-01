@@ -1,0 +1,37 @@
+{% extends "base.html" % }
+{% block content % }
+<div class = "d-flex justify-content-between align-items-center mb-4" >
+    <h2 > Admin Dashboard < /h2 >
+    <a href = "{{ url_for('admin_logout') }}" class = "btn btn-danger" > Logout < /a >
+< / div >
+
+<div class = "row" >
+   <div class = "col-md-4" >
+       <div class = "card text-white bg-success mb-3 shadow-sm" >
+           <div class = "card-body" >
+                <h5 class = "card-title" > Manage Blog Posts < /h5 >
+                <p class = "card-text" > Add, edit, or remove blog content. < /p >
+                <a href = "#" class = "btn btn-light btn-sm" > Go to Posts < /a >
+            < / div >
+        < / div >
+    < / div >
+    <div class = "col-md-4" >
+       <div class = "card text-white bg-info mb-3 shadow-sm" >
+           <div class = "card-body" >
+                <h5 class = "card-title" > Manage Products</h5>
+                <p class = "card-text" > Update product listings and pricing.</p>
+                <a href = "#" class = "btn btn-light btn-sm">Go to Products</a>
+            < / div >
+        < / div >
+    < / div >
+    <div class = "col-md-4" >
+       <div class = "card text-white bg-warning mb-3 shadow-sm" >
+           <div class = "card-body" >
+                <h5 class = "card-title" > Site Settings</h5>
+                <p class = "card-text" > Configure global website settings.</p>
+                <a href = "#" class = "btn btn-light btn-sm">Go to Settings</a>
+            < / div >
+        < / div >
+    < / div >
+< / div >
+{ % endblock % }

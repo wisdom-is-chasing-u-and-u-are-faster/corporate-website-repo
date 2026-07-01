@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "Welcome to Our New Website",
+        "date": "2024-05-01",
+        "summary": "We are thrilled to launch our new corporate website designed to serve you better.",
+        "content": "<p>After months of hard work, we are excited to announce the launch of our newly designed website. Our goal with this new website is to provide our visitors an easier way to learn about our services and solutions.</p><p>We hope you find the new website with a fresh look, easy to access information.</p>"
+    },
+    {
+        "id": 2,
+        "title": "Industry Trends for Q3",
+        "date": "2024-06-15",
+        "summary": "A look at the major trends shaping our industry this quarter.",
+        "content": "<p>The industry is seeing a massive shift towards automation and AI integration. Companies that adapt quickly are seeing significant gains in efficiency.</p><ul><li>Trend 1: AI Integration</li><li>Trend 2: Remote Work Tools</li><li>Trend 3: Cybersecurity Enhancements</li></ul>"
+    }
+]
