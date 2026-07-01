@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Website - Master Plan</title>
+    <style>
+        /* CSS Reset & Base Styles */
+        :root {
+            --primary: #0A2540;
+            --accent: #30C59B;
+            --accent-dark: #28a782;
+            --text-light: #F6F9FC;
+            --text-dark: #525F7F;
+            --text-headings: #0A2540;
+            --bg-light: #FFFFFF;
+            --bg-light-alt: #F6F9FC;
+            --border-light: #E6E6E6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+            --spacing-1: 8px;
+            --spacing-2: 16px;
+            --spacing-3: 24px;
+            --spacing-4: 32px;
+            --spacing-5: 48px;
+            --spacing-6: 64px;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        html[data-theme='dark'] {
+            --primary: #30C59B;
+            --accent: #FFFFFF;
+            --accent-dark: #cccccc;
+            --text-light: #F6F9FC;
+            --text-dark: #9aacc1;
+            --text-headings: #F6F9FC;
+            --bg-light: #0A2540;
+            --bg-light-alt: #081f33;
+            --border-light: #1e3a5a;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-headings);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-2);
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        p { margin-bottom: var(--spacing-2); }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--accent-dark); }
+        img, svg { max-width: 100%; height: auto; }
+
+        /* Utilities */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-3);
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn {
+            display: inline-block;
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary {
+            background-color: var(--accent);
+            color: #FFF;
+            border: 2px solid var(--accent);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-headings);
+            border: 2px solid var(--border-light);
+        }
+        .btn-secondary:hover {
+            background-color: var(--bg-light-alt);
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-1);
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* Header & Navigation */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--bg-light);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-2) 0;
+        }
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-headings);
+        }
+        .main-nav ul {
+            display: flex;
+            gap: var(--spacing-4);
+            list-style: none;
+        }
+        .main-nav a {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .main-nav a.active, .main-nav a:hover {
+            color: var(--accent);
+        }
+        .nav-controls { display: flex; align-items: center; gap: var(--spacing-2); }
+        .theme-toggle { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--text-dark); }
+        .mobile-toggle { display: none; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--text-headings); }
+
+        /* Main Content & Sections */
+        main > section {
+            display: none;
+            padding: var(--spacing-6) 0;
+        }
+        main > section:target, main > section.active {
+            display: block;
+        }
+        main > section[id="home"] { padding: 0; }
+
+        /* Footer */
+        .main-footer {
+            background-color: var(--bg-light-alt);
+            padding: var(--spacing-5) 0;
+            border-top: 1px solid var(--border-light);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+        }
+        .footer-col h4 {
+            color: var(--text-headings);
+            margin-bottom: var(--spacing-2);
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: var(--spacing-1); }
+        .footer-col a { color: var(--text-dark); }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-bottom {
+            margin-top: var(--spacing-4);
+            padding-top: var(--spacing-3);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .mobile-toggle { display: block; }
+            .main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-light);
+                flex-direction: column;
+                padding: var(--spacing-3);
+                display: none;
+            }
+            .main-nav.active { display: flex; }
+            .main-nav ul { flex-direction: column; }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            .hero-content h1 { font-size: 2.5rem;}
+        }
+
+        /* Component Styles */
+        .card {
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        .form-group { margin-bottom: var(--spacing-3); }
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-1);
+            font-weight: 600;
+            color: var(--text-headings);
+        }
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-2);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background: var(--bg-light-alt);
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 197, 155, 0.3);
+        }
+        .grid {
+            display: grid;
+            gap: var(--spacing-4);
+        }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .text-center { text-align: center; }
+
+        /* Page-specific styles */
+        #home { padding-top: 0; }
+        .hero {
+            background-color: var(--bg-light-alt);
+            padding: 8rem 0;
+            text-align: center;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: var(--spacing-3) auto var(--spacing-4);
+        }
+        #blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-4);
+        }
+        #blog-post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-4) 0;
+        }
+
+        /* Admin Styles */
+        .admin-nav {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--primary);
+            color: var(--text-light);
+            padding: var(--spacing-4);
+        }
+        .admin-nav .logo { color: var(--text-light); }
+        .admin-nav ul { list-style: none; margin-top: var(--spacing-5); }
+        .admin-nav ul li a {
+            display: block;
+            color: var(--text-light);
+            padding: var(--spacing-2);
+            border-radius: var(--radius-md);
+        }
+        .admin-nav ul li a:hover, .admin-nav ul li a.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .admin-main { margin-left: 250px; }
+        .admin-header {
+            padding: var(--spacing-3);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-light);
+        }
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light-alt);
+        }
+        .admin-login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="main-header" id="main-header">
+        <div class="container">
+            <a href="#home" class="logo">CorpWeb</a>
+            <nav class="main-nav" id="main-nav">
+                <ul>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#about" class="nav-link">About Us</a></li>
+                    <li><a href="#products" class="nav-link">Products/Services</a></li>
+                    <li><a href="#blog" class="nav-link">Blog</a></li>
+                    <li><a href="#contact" class="nav-link">Contact Us</a></li>
+                    <li><a href="#admin-login" class="nav-link">Admin</a></li>
+                </ul>
+            </nav>
+            <div class="nav-controls">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+                <button id="mobile-toggle" class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Home Page -->
+        <section id="home" class="active">
+            <div class="hero">
+                <div class="hero-content container">
+                    <h1>Innovate, Create, <span class="text-gradient">Succeed</span></h1>
+                    <p>We provide cutting-edge solutions for modern businesses. Drive growth, enhance efficiency, and unlock your potential with our expert services.</p>
+                    <div>
+                        <a href="#products" class="btn btn-primary">Our Services</a>
+                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="padding-top: var(--spacing-6); padding-bottom: var(--spacing-6);">
+                <div class="text-center" style="margin-bottom: var(--spacing-5);">
+                    <h2>Why Choose Us?</h2>
+                    <p>Leverage our expertise to achieve your business goals.</p>
+                </div>
+                <div class="grid grid-cols-3">
+                    <div class="card text-center">
+                        <h3>Expert Team</h3>
+                        <p>Our team consists of industry veterans with years of experience in delivering excellence.</p>
+                    </div>
+                    <div class="card text-center">
+                        <h3>Tailored Solutions</h3>
+                        <p>We don't believe in one-size-fits-all. Every solution is customized to your specific needs.</p>
+                    </div>
+                    <div class="card text-center">
+                        <h3>Proven Results</h3>
+                        <p>We have a track record of helping businesses like yours grow and succeed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Page -->
+        <section id="about">
+            <div class="container">
+                <div class="text-center">
+                    <h2>About Our Company</h2>
+                    <p>We are a team of passionate professionals dedicated to innovation and quality.</p>
+                </div>
+                <div class="grid grid-cols-2" style="margin-top: var(--spacing-5); align-items: center;">
+                    <div>
+                        <h3>Our Mission</h3>
+                        <p>Our mission is to empower businesses with transformative technology and strategic insights. We strive to be a trusted partner, delivering solutions that not only meet but exceed expectations, fostering growth and long-term success for our clients in an ever-evolving digital landscape.</p>
+                        <h3>Our Vision</h3>
+                        <p>We envision a future where businesses of all sizes can harness the power of technology to operate more efficiently, connect with customers more meaningfully, and make smarter, data-driven decisions. We aim to be at the forefront of this change, pioneering new tools and methodologies.</p>
+                    </div>
+                    <div>
+                        <img src="https://via.placeholder.com/500x400.png/F6F9FC/525F7F?text=Our+Team" alt="A placeholder image of a diverse team in an office setting." style="border-radius: var(--radius-lg);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products/Services Page -->
+        <section id="products">
+            <div class="container">
+                <div class="text-center">
+                    <h2>Our Products & Services</h2>
+                    <p>Solutions designed to help you achieve more.</p>
+                </div>
+                <div id="product-grid" class="grid grid-cols-3" style="margin-top: var(--spacing-5);">
+                    <div class="card">
+                        <h3>Cloud Integration</h3>
+                        <p>Seamlessly connect your systems and data with our robust cloud integration services. Enhance scalability and performance.</p>
+                        <a href="#contact" class="btn btn-secondary" style="margin-top: auto;">Learn More</a>
+                    </div>
+                    <div class="card">
+                        <h3>Data Analytics</h3>
+                        <p>Turn your data into actionable insights. Our analytics platforms help you make informed decisions to drive your business forward.</p>
+                        <a href="#contact" class="btn btn-secondary" style="margin-top: auto;">Learn More</a>
+                    </div>
+                    <div class="card">
+                        <h3>Managed IT Services</h3>
+                        <p>Focus on your core business while we manage your IT infrastructure. Reliable, secure, and cost-effective.</p>
+                        <a href="#contact" class="btn btn-secondary" style="margin-top: auto;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Page -->
+        <section id="blog">
+            <div class="container">
+                <div class="text-center">
+                    <h2>From Our Blog</h2>
+                    <p>Insights, news, and articles from our team.</p>
+                </div>
+                <div id="blog-grid" style="margin-top: var(--spacing-5);">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250.png/F6F9FC/525F7F?text=Blog+Image+1" alt="Placeholder image for a blog post" style="border-radius: var(--radius-md); margin-bottom: var(--spacing-2)">
+                        <h3>The Future of AI in Business</h3>
+                        <p>Explore how artificial intelligence is reshaping industries and what it means for you.</p>
+                        <a href="#blog-post" class="btn btn-secondary" style="margin-top: auto;">Read More</a>
+                    </div>
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250.png/F6F9FC/525F7F?text=Blog+Image+2" alt="Placeholder image for a blog post" style="border-radius: var(--radius-md); margin-bottom: var(--spacing-2)">
+                        <h3>Cybersecurity Best Practices for 2024</h3>
+                        <p>In an increasingly digital world, protecting your assets is more important than ever.</p>
+                        <a href="#blog-post" class="btn btn-secondary" style="margin-top: auto;">Read More</a>
+                    </div>
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250.png/F6F9FC/525F7F?text=Blog+Image+3" alt="Placeholder image for a blog post" style="border-radius: var(--radius-md); margin-bottom: var(--spacing-2)">
+                        <h3>Maximizing Your Cloud Investment</h3>
+                        <p>Are you getting the most out of your cloud services? Here are some tips to optimize your spend.</p>
+                        <a href="#blog-post" class="btn btn-secondary" style="margin-top: auto;">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Post Page -->
+        <section id="blog-post">
+            <div class="container" style="max-width: 800px;">
+                <a href="#blog" class="btn btn-secondary">&larr; Back to Blog</a>
+                <article id="blog-post-content" style="margin-top: var(--spacing-4);">
+                    <h1>The Future of AI in Business</h1>
+                    <p><em>Published on October 26, 2023 by Jane Doe</em></p>
+                    <img src="https://via.placeholder.com/800x400.png/F6F9FC/525F7F?text=AI+in+Business" alt="Wide placeholder image illustrating AI concepts.">
+                    <p>Artificial intelligence (AI) is no longer a futuristic concept; it's a present-day reality that is fundamentally transforming the business landscape. From automating routine tasks to providing deep predictive insights, AI is empowering organizations to operate with unprecedented efficiency and intelligence.</p>
+                    <h3>Enhanced Customer Experiences</h3>
+                    <p>One of the most significant impacts of AI is in the realm of customer service. AI-powered chatbots provide 24/7 support, answering customer queries instantly. Personalization engines analyze user behavior to offer tailored recommendations, creating a more engaging and satisfying customer journey.</p>
+                    <h3>Data-Driven Decision Making</h3>
+                    <p>Businesses are collecting more data than ever before. AI and machine learning algorithms can sift through vast datasets to identify trends, predict future outcomes, and uncover opportunities that would be impossible for humans to spot. This enables leaders to make strategic decisions with greater confidence.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact Us Page -->
+        <section id="contact">
+            <div class="container">
+                <div class="text-center">
+                    <h2>Contact Us</h2>
+                    <p>We'd love to hear from you. Reach out with any questions or to start a project.</p>
+                </div>
+                <div class="card" style="margin-top: var(--spacing-5); max-width: 700px; margin-left: auto; margin-right: auto;">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        <p id="form-status" style="margin-top: var(--spacing-2); text-align: center;"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Login -->
+        <section id="admin-login">
+            <div class="admin-login-container">
+                <div class="admin-login-form card">
+                    <div class="text-center">
+                        <h2>Admin Login</h2>
+                        <p>Access the content management dashboard.</p>
+                    </div>
+                    <form id="admin-login-form" style="margin-top: var(--spacing-4);">
+                        <div class="form-group">
+                            <label for="admin-username">Username</label>
+                            <input type="text" id="admin-username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">Password</label>
+                            <input type="password" id="admin-password" class="form-control" required>
+                        </div>
+                        <a href="#admin-dashboard" class="btn btn-primary" style="width: 100%;">Log In</a>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin-dashboard" style="padding: 0;">
+            <nav class="admin-nav">
+                <a href="#home" class="logo">CorpWeb Admin</a>
+                <ul>
+                    <li><a href="#admin-dashboard" class="active">Dashboard</a></li>
+                    <li><a href="#">Content</a></li>
+                    <li><a href="#">Users</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#home">Logout</a></li>
+                </ul>
+            </nav>
+            <main class="admin-main">
+                <header class="admin-header">
+                    <h2>Content Management</h2>
+                </header>
+                <div style="padding: var(--spacing-4);">
+                     <div class="card">
+                        <h3>All Content</h3>
+                        <p>Here you can edit pages, blog posts, and other site content.</p>
+                        <table style="width: 100%; margin-top: var(--spacing-3); text-align: left;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: var(--spacing-2);">Title</th>
+                                    <th style="padding: var(--spacing-2);">Type</th>
+                                    <th style="padding: var(--spacing-2);">Last Modified</th>
+                                    <th style="padding: var(--spacing-2);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-top: 1px solid var(--border-light);">
+                                    <td style="padding: var(--spacing-2);">Home Page</td>
+                                    <td style="padding: var(--spacing-2);">Page</td>
+                                    <td style="padding: var(--spacing-2);">2023-10-25</td>
+                                    <td style="padding: var(--spacing-2);"><a href="#">Edit</a> | <a href="#" style="color: #dc3545;">Delete</a></td>
+                                </tr>
+                                <tr style="border-top: 1px solid var(--border-light);">
+                                    <td style="padding: var(--spacing-2);">The Future of AI in Business</td>
+                                    <td style="padding: var(--spacing-2);">Blog Post</td>
+                                    <td style="padding: var(--spacing-2);">2023-10-26</td>
+                                    <td style="padding: var(--spacing-2);"><a href="#">Edit</a> | <a href="#" style="color: #dc3545;">Delete</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </section>
+
+    </main>
+
+    <footer class="main-footer" id="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>CorpWeb</h4>
+                    <p>Innovate, Create, Succeed.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#products">Services</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#contact">Contact Form</a></li>
+                        <li>info@corpweb.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CorpWeb. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mainHeader = document.getElementById('main-header');
+        const mainFooter = document.getElementById('main-footer');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main > section');
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mainNav = document.getElementById('main-nav');
+        const themeToggle = document.getElementById('theme-toggle');
+        const contactForm = document.getElementById('contact-form');
+        const formStatus = document.getElementById('form-status');
+
+        function updateLayoutForAdmin(hash) {
+            const isAdminRoute = hash.startsWith('#admin');
+            if (isAdminRoute) {
+                mainHeader.style.display = 'none';
+                mainFooter.style.display = 'none';
+            } else {
+                mainHeader.style.display = '';
+                mainFooter.style.display = '';
+            }
+        }
+        
+        function updateActiveLink() {
+            const hash = window.location.hash || '#home';
+            
+            updateLayoutForAdmin(hash);
+
+            sections.forEach(section => {
+                if ('#' + section.id === hash) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Close mobile nav on selection
+            if(mainNav.classList.contains('active')) {
+                mainNav.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        window.addEventListener('hashchange', updateActiveLink);
+        // Initial load
+        if (!window.location.hash) {
+            window.location.hash = '#home';
+        }
+        updateActiveLink();
+
+        // Mobile Nav Toggle
+        mobileToggle.addEventListener('click', () => {
+            const isExpanded = mainNav.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', isExpanded);
+        });
+        
+        // Theme Toggle
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('theme');
+                themeToggle.textContent = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        // Contact Form
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                formStatus.textContent = 'Sending...';
+                formStatus.style.color = 'var(--text-dark)';
+                setTimeout(() => {
+                    formStatus.textContent = 'Thank you for your message! We will get back to you shortly.';
+                    formStatus.style.color = 'green';
+                    contactForm.reset();
+                }, 1000);
+            });
+        }
+    });
+    </script>
+</body>
+</html>
