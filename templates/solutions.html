@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions - NexusSphere Technologies</title>
+    <meta name="description" content="Explore our suite of enterprise software solutions including QuantumCompute AI, NexusCloud Platform, and DataSphere Analytics.">
+    <style>
+
+:root {
+    --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* Light Theme */
+    --primary-light: #0D1B2A; /* Deep Slate Blue */
+    --accent-light: #007BFF; /* Vivid Blue */
+    --accent-hover-light: #0056b3;
+    --text-light: #212529;
+    --text-muted-light: #6c757d;
+    --background-light: #ffffff;
+    --surface-light: #f8f9fa;
+    --border-light: #dee2e6;
+    --gradient-light: linear-gradient(90deg, #007BFF 0%, #0056b3 100%);
+    --shadow-color-light: 220, 15%, 15%;
+
+    /* Dark Theme */
+    --primary-dark: #FFFFFF;
+    --accent-dark: #00A1FF;
+    --accent-hover-dark: #007BFF;
+    --text-dark: #E9ECEF;
+    --text-muted-dark: #ADB5BD;
+    --background-dark: #0A1929; /* Dark Navy */
+    --surface-dark: #122235; /* Darker Slate */
+    --border-dark: #34445A;
+    --gradient-dark: linear-gradient(90deg, #00A1FF 0%, #007BFF 100%);
+    --shadow-color-dark: 210, 30%, 5%;
+
+    /* Default to Light Theme */
+    --primary: var(--primary-light);
+    --accent: var(--accent-light);
+    --accent-hover: var(--accent-hover-light);
+    --text-color: var(--text-light);
+    --text-muted: var(--text-muted-light);
+    --background-color: var(--background-light);
+    --surface-color: var(--surface-light);
+    --border-color: var(--border-light);
+    --gradient: var(--gradient-light);
+    --shadow-color: var(--shadow-color-light);
+
+    --shadow-sm: 0 1px 2px 0px hsla(var(--shadow-color), 0.05);
+    --shadow-md: 0 4px 6px -1px hsla(var(--shadow-color), 0.1), 0 2px 4px -2px hsla(var(--shadow-color), 0.1);
+    --shadow-lg: 0 10px 15px -3px hsla(var(--shadow-color), 0.1), 0 4px 6px -4px hsla(var(--shadow-color), 0.1);
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+
+    --spacing-1: 8px;
+    --spacing-2: 16px;
+    --spacing-3: 24px;
+    --spacing-4: 32px;
+    --spacing-5: 48px;
+    --spacing-6: 64px;
+
+    --transition-fast: all 0.2s ease-in-out;
+}
+
+[data-theme="dark"] {
+    --primary: var(--primary-dark);
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --text-color: var(--text-dark);
+    --text-muted: var(--text-muted-dark);
+    --background-color: var(--background-dark);
+    --surface-color: var(--surface-dark);
+    --border-color: var(--border-dark);
+    --gradient: var(--gradient-dark);
+    --shadow-color: var(--shadow-color-dark);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-3);
+    padding-right: var(--spacing-3);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+h1 { font-size: 3rem; margin-bottom: var(--spacing-3); }
+h2 { font-size: 2.25rem; margin-bottom: var(--spacing-2); }
+h3 { font-size: 1.5rem; margin-bottom: var(--spacing-2); }
+p { margin-bottom: var(--spacing-2); color: var(--text-muted); }
+a { color: var(--accent); text-decoration: none; transition: var(--transition-fast); }
+a:hover { color: var(--accent-hover); }
+
+.gradient-text {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* Header & Nav */
+.main-header {
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-2) 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: var(--transition-fast);
+}
+.main-nav { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+.nav-links { display: flex; gap: var(--spacing-3); list-style: none; }
+.nav-links a { font-weight: 500; color: var(--text-color); padding: var(--spacing-1); border-bottom: 2px solid transparent; }
+.nav-links a.active, .nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-controls { display: flex; align-items: center; gap: var(--spacing-2); }
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+    -webkit-user-select: none; -moz-user-select: none; user-select: none;
+}
+.btn-primary { color: #fff; background: var(--gradient); border: none; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-secondary {
+    color: var(--accent);
+    background-color: transparent;
+    border-color: var(--accent);
+}
+.btn-secondary:hover { background-color: var(--accent); color: #fff; }
+
+/* Cards */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+/* Forms */
+.form-group { margin-bottom: var(--spacing-2); }
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-control:focus {
+    border-color: var(--accent);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem hsla(var(--accent), 0.25);
+}
+textarea.form-control { min-height: 120px; }
+
+/* Footer */
+.main-footer {
+    background-color: var(--surface-color);
+    color: var(--text-muted);
+    padding: var(--spacing-5) 0;
+    margin-top: var(--spacing-6);
+    border-top: 1px solid var(--border-color);
+}
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+}
+
+/* Sections & Layout */
+main > section {
+    padding: var(--spacing-6) 0;
+}
+.hero {
+    text-align: center;
+    padding: var(--spacing-6) 0;
+}
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 650px;
+    margin: var(--spacing-3) auto;
+    color: var(--text-muted);
+}
+.hero-actions {
+    display: flex;
+    gap: var(--spacing-2);
+    justify-content: center;
+    margin-top: var(--spacing-4);
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 99px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+}
+.theme-toggle span {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    line-height: 1;
+    opacity: 0.5;
+}
+.theme-toggle .active-theme {
+    background: var(--accent);
+    color: white;
+    border-radius: 99px;
+    opacity: 1;
+}
+
+/* Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--accent);
+    color: white;
+    padding: var(--spacing-1);
+    z-index: 1000;
+    transition: top 0.3s;
+}
+.skip-link:focus { top: 0; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-links { display: none; } /* Simplified for demo, would need a mobile menu */
+    h1 { font-size: 2.5rem; }
+    .hero h1 { font-size: 2.75rem; }
+    .hero p { font-size: 1.1rem; }
+    .footer-content { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 375px) {
+    .hero-actions { flex-direction: column; }
+}
+
+</style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="main-header">
+        <div class="container">
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="home.html" class="logo">NexusSphere</a>
+                <ul class="nav-links">
+                    <li><a href="home.html" class="nav-link">Home</a></li>
+                    <li><a href="solutions.html" class="nav-link active">Solutions</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-controls">
+                    <a href="contact.html" class="btn btn-secondary">Request a Demo</a>
+                    <div class="theme-toggle" role="button" aria-label="Toggle theme" tabindex="0">
+                      <span id="light-mode-icon" class="active-theme">Light</span>
+                      <span id="dark-mode-icon">Dark</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section>
+            <div class="container">
+                <h2>Our <span class="gradient-text">Solutions Suite</span></h2>
+                <p>Discover our range of products designed to tackle the most demanding challenges in today\'s enterprise landscape.</p>
+                
+                <div class="card" style="margin-top: var(--spacing-4);">
+                    <h3>QuantumCompute AI</h3>
+                    <p>An advanced machine learning and AI operations (MLOps) platform that empowers data scientists and developers to build, deploy, and manage high-performance models at scale. Key features include automated model training, real-time inferencing, and comprehensive monitoring to ensure peak performance and accuracy.</p>
+                </div>
+                <div class="card" style="margin-top: var(--spacing-4);">
+                    <h3>NexusCloud Platform</h3>
+                    <p>A unified cloud management platform that provides a single pane of glass for managing multi-cloud environments. NexusCloud simplifies resource provisioning, automates workload balancing, and enforces security policies across AWS, Azure, and Google Cloud, reducing complexity and operational overhead.</p>
+                </div>
+                <div class="card" style="margin-top: var(--spacing-4);">
+                    <h3>DataSphere Analytics</h3>
+                    <p>A self-service business intelligence (BI) and data analytics platform that enables everyone in your organization to explore data and discover insights. With an intuitive drag-and-drop interface and powerful visualization capabilities, DataSphere makes data-driven decision-making accessible to all.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 NexusSphere Technologies. All rights reserved.</p>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener(\'DOMContentLoaded\', function () {
+            const themeToggle = document.querySelector(\'.theme-toggle\');
+            const lightIcon = document.getElementById(\'light-mode-icon\');
+            const darkIcon = document.getElementById(\'dark-mode-icon\');
+            const htmlEl = document.documentElement;
+
+            const applyTheme = (theme) => {
+                htmlEl.setAttribute(\'data-theme\', theme);
+                if (theme === \'dark\') {
+                    darkIcon.classList.add(\'active-theme\');
+                    lightIcon.classList.remove(\'active-theme\');
+                } else {
+                    lightIcon.classList.add(\'active-theme\');
+                    darkIcon.classList.remove(\'active-theme\');
+                }
+                localStorage.setItem(\'theme\', theme);
+            };
+
+            themeToggle.addEventListener(\'click\', () => {
+                const currentTheme = htmlEl.getAttribute(\'data-theme\') === \'dark\' ? \'light\' : \'dark\';
+                applyTheme(currentTheme);
+            });
+            
+            themeToggle.addEventListener(\'keydown\', (e) => {
+                if (e.key === \'Enter\' || e.key === \' \') {
+                    const currentTheme = htmlEl.getAttribute(\'data-theme\') === \'dark\' ? \'light\' : \'dark\';
+                    applyTheme(currentTheme);
+                }
+            });
+
+            const savedTheme = localStorage.getItem(\'theme\') || \'light\';
+            applyTheme(savedTheme);
+        });
+    </script>
+</body>
+</html>
