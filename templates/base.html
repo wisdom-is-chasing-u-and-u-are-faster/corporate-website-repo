@@ -1,34 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Forge Corporate Website{% endblock %}</title>
+    <title>{% block title %}Forge | Corporate Website{% endblock %}</title>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-        header { background: #0A2540; color: #fff; padding: 1rem 2rem; display: flex; justify-space-between; align-items: center; }
-        nav a { color: #fff; text-decoration: none; margin-left: 1.5rem; }
-        nav a:hover { color: #00B5E2; }
-        main { min-height: 80vh; }
-        footer { background: #0A2540; color: #8898AA; text-align: center; padding: 2rem; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        header { background: #ffffff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 50; }
+        nav { display: flex; justify-content: space-between; align-items: center; height: 4.5rem; }
+        .nav-logo { font-size: 1.5rem; font-weight: 700; color: #0284c7; text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #475569; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #0284c7; }
+        footer { background: #0f172a; color: #94a3b8; padding: 3rem 0; margin-top: 4rem; text-align: center; }
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; font-size: 0.9rem; }
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
 <body>
     <header>
-        <div class="logo"><strong>Forge</strong></div>
-        <nav>
-            <a href="/home">Home</a>
-            <a href="/solutions">Solutions</a>
-            <a href="/about">About Us</a>
-            <a href="/contact">Contact Us</a>
-        </nav>
+        <div class="container">
+            <nav>
+                <a href="/home" class="nav-logo">Forge</a>
+                <ul class="nav-links">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/solutions">Solutions</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
+
     <main>
         {% block content %}{% endblock %}
     </main>
+
     <footer>
-        &copy; Forge. All rights reserved.
+        <div class="container">
+            <p>&copy; 2026 Forge Corporate Inc. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>
