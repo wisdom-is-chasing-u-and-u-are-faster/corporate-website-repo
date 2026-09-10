@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokenized Checkout — AURA LUXE</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="brand-title font-serif">AURA LUXE</a>
+    <nav>
+      <a href="index.html">Viral Drops</a>
+      <a href="shade-finder.html">Shade Matcher</a>
+      <a href="pdp.html">Serum Foundation</a>
+      <a href="cart.html">Cart</a>
+      <a href="subscriptions.html">My Regimens</a>
+    </nav>
+  </header>
+
+  <div class="container" style="max-width: 700px;">
+    <div class="card">
+      <span class="badge-gold">PCI-DSS Level 1 Encrypted</span>
+      <h1 class="font-serif" style="font-size: 1.85rem; margin: 0.5rem 0 1.5rem;">Express Tokenized Checkout</h1>
+
+      <!-- 1-Click Pay Buttons -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <button class="btn" style="background: #000; color: #FFF; font-weight: 700;" onclick="quickPay('apple_pay')">
+           Pay with Apple Pay
+        </button>
+        <button class="btn" style="background: #4285F4; color: #FFF; font-weight: 700;" onclick="quickPay('google_pay')">
+          G Pay with Google Pay
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 1.5rem; color: var(--color-text-muted); font-size: 0.85rem;">
+        — OR PAY WITH CREDIT / DEBIT CARD —
+      </div>
+
+      <!-- Shipping Address Form -->
+      <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">1. Shipping Details</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 600;">First Name</label>
+          <input type="text" id="ship-fn" value="Elena" class="input-control">
+        </div>
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 600;">Last Name</label>
+          <input type="text" id="ship-ln" value="Rostova" class="input-control">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 0.85rem; font-weight: 600;">Street Address</label>
+        <input type="text" id="ship-street" value="123 Fifth Avenue" class="input-control">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.75rem;">
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 600;">City</label>
+          <input type="text" id="ship-city" value="New York" class="input-control">
+        </div>
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 600;">State</label>
+          <input type="text" id="ship-state" value="NY" class="input-control">
+        </div>
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 600;">Postal Code</label>
+          <input type="text" id="ship-zip" value="10001" class="input-control">
+        </div>
+      </div>
+
+      <!-- Stripe Elements Tokenized Card Field -->
+      <h3 style="font-size: 1.1rem; margin: 1.25rem 0 0.75rem;">2. Payment Method (Stripe Elements)</h3>
+      <div style="background: #F9F9F9; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+        <div style="font-size: 0.85rem; color: #555; margin-bottom: 0.5rem;">🔒 Hosted Card Iframe (Zero PAN storage on server)</div>
+        <input type="text" id="card-sim" value="•••• •••• •••• 4242  |  08/28  |  CVC 123" class="input-control" style="background: #FFF; font-family: monospace; font-weight: 600;" readonly>
+      </div>
+
+      <!-- Submit CTA -->
+      <button id="btn-submit-order" class="btn btn-rose" style="width: 100%; font-size: 1.1rem; padding: 1rem;" onclick="submitCheckout()">
+        Complete Order ($48.00)
+      </button>
+
+      <!-- Confirmation Overlay -->
+      <div id="order-success-modal" style="display: none; margin-top: 1.5rem; background: #E8F5E9; border: 1px solid var(--color-emerald); padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <h3 style="color: var(--color-emerald); font-size: 1.3rem;">🎉 Order Successfully Confirmed!</h3>
+        <p id="order-conf-number" style="font-weight: 700; margin: 0.5rem 0; font-family: monospace; font-size: 1.1rem;"></p>
+        <p style="color: #444; font-size: 0.9rem;">Transactional outbox event emitted and inventory ledger committed.</p>
+        <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">Return to Storefront</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    async function submitCheckout() {
+      const btn = document.getElementById('btn-submit-order');
+      btn.disabled = true;
+      btn.innerText = 'Processing Order Saga...';
+
+      const stored = sessionStorage.getItem('active_reservation');
+      const reservation = stored ? JSON.parse(stored) : { reservation_id: '7f918074-b5a8-4bb5-9e48-ec8d5e1281df' };
+
+      const address = {
+        street_1: document.getElementById('ship-street').value,
+        city: document.getElementById('ship-city').value,
+        state_province: document.getElementById('ship-state').value,
+        postal_code: document.getElementById('ship-zip').value,
+        country_iso2: 'US'
+      };
+
+      const paymentToken = 'pm_card_visa_tok_live_001924';
+      const isSub = reservation.is_sub || false;
+      const freq = reservation.freq || 60;
+      const idempotencyKey = 'idemp_' + Math.random().toString(36).substring(2, 12);
+
+      try {
+        const order = await API.checkout(reservation.reservation_id, paymentToken, address, isSub, freq, idempotencyKey);
+        btn.style.display = 'none';
+        document.getElementById('order-conf-number').innerText = `Order: ${order.order_number}`;
+        document.getElementById('order-success-modal').style.display = 'block';
+      } catch (err) {
+        alert('Checkout error: ' + err.message);
+        btn.disabled = false;
+        btn.innerText = 'Complete Order ($48.00)';
+      }
+    }
+
+    function quickPay(type) {
+      alert(`Initiating 1-Click tokenized payment with ${type === 'apple_pay' ? 'Apple Pay' : 'Google Pay'}`);
+      submitCheckout();
+    }
+  </script>
+</body>
+</html>

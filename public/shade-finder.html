@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faceted Shade Finder & AR Camera Matcher — AURA LUXE</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="brand-title font-serif">AURA LUXE</a>
+    <nav>
+      <a href="index.html">Viral Drops</a>
+      <a href="shade-finder.html" class="active">Shade Matcher</a>
+      <a href="pdp.html">Serum Foundation</a>
+      <a href="cart.html">Cart</a>
+      <a href="subscriptions.html">My Regimens</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <span class="badge-gold">AI-Powered Color Proximity</span>
+      <h1 class="font-serif" style="font-size: 2.25rem; margin-top: 0.5rem;">50-Shade Precision Complexion Matrix</h1>
+      <p style="color: var(--color-text-muted); max-width: 600px; margin: 0.5rem auto 0;">
+        Match foundation shades using CIELAB Delta-E color distance calculations across Warm, Cool, Neutral, and Olive tones.
+      </p>
+    </div>
+
+    <!-- Interactive AR / WebCam Shade Extraction Card -->
+    <div class="card" style="background: linear-gradient(135deg, #FFFFFF 0%, #FAF4F5 100%); border-color: var(--color-rose-gold);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h3 class="font-serif" style="font-size: 1.3rem;">Camera AR Shade Matcher</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">Sample your skin tone directly using your device camera or custom hex code.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <input type="color" id="color-picker" value="#c68642" style="width: 44px; height: 44px; border: none; border-radius: 50%; cursor: pointer;" onchange="onColorChange(this.value)">
+          <input type="text" id="hex-input" value="#c68642" class="input-control" style="width: 110px; margin: 0; font-family: monospace; font-weight: 700; text-transform: uppercase;" onchange="onHexInputChange(this.value)">
+          <button id="btn-camera-match" class="btn btn-rose" onclick="matchCustomHex()">Match Shade</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Faceted Filter Controls -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <button class="btn btn-outline active" style="padding: 0.4rem 1rem;" onclick="filterUndertone('')">All Undertones</button>
+      <button class="btn btn-outline" style="padding: 0.4rem 1rem;" onclick="filterUndertone('WARM')">Warm</button>
+      <button class="btn btn-outline" style="padding: 0.4rem 1rem;" onclick="filterUndertone('COOL')">Cool</button>
+      <button class="btn btn-outline" style="padding: 0.4rem 1rem;" onclick="filterUndertone('NEUTRAL')">Neutral</button>
+      <button class="btn btn-outline" style="padding: 0.4rem 1rem;" onclick="filterUndertone('OLIVE')">Olive</button>
+    </div>
+
+    <!-- Active Match Result Banner -->
+    <div id="match-banner" class="card" style="display: none; border-left: 5px solid var(--color-rose-gold);">
+      <h3 id="best-match-title" class="font-serif" style="font-size: 1.25rem;">Best Match: 230W Medium Honey Warm</h3>
+      <div id="best-match-details" style="color: var(--color-text-muted); margin-top: 0.25rem;"></div>
+      <div style="margin-top: 1rem;">
+        <a id="btn-view-match-pdp" href="pdp.html" class="btn btn-primary">View Product & Reserve</a>
+      </div>
+    </div>
+
+    <!-- 50-Shade Swatch Grid Matrix -->
+    <div class="card">
+      <h3 class="font-serif" style="font-size: 1.3rem; margin-bottom: 0.5rem;">Interactive Swatch Palette</h3>
+      <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Select any shade to inspect attributes or purchase.</p>
+      <div id="swatch-matrix" class="swatch-grid" role="radiogroup" aria-label="50-Shade Complexion Matrix">
+        <!-- Dynamically rendered swatches -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let allVariants = [];
+    let activeUndertone = '';
+
+    async function init() {
+      const data = await API.listVariants();
+      allVariants = data.variants;
+      renderSwatches();
+    }
+
+    function renderSwatches() {
+      const container = document.getElementById('swatch-matrix');
+      container.innerHTML = '';
+
+      const filtered = activeUndertone 
+        ? allVariants.filter(v => v.shade_undertone === activeUndertone)
+        : allVariants;
+
+      filtered.forEach(v => {
+        const swatch = document.createElement('button');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = v.shade_hex_code;
+        swatch.setAttribute('role', 'radio');
+        swatch.setAttribute('aria-label', `${v.shade_name}, ${v.finish_type} Finish, ${v.in_stock ? 'In Stock' : 'Sold Out'}`);
+        swatch.title = `${v.shade_name} (${v.shade_hex_code})`;
+
+        swatch.onclick = () => selectSwatch(v);
+        container.appendChild(swatch);
+      });
+    }
+
+    function filterUndertone(tone) {
+      activeUndertone = tone;
+      renderSwatches();
+    }
+
+    function onColorChange(hex) {
+      document.getElementById('hex-input').value = hex;
+    }
+
+    function onHexInputChange(hex) {
+      document.getElementById('color-picker').value = hex;
+    }
+
+    async function matchCustomHex() {
+      const hex = document.getElementById('hex-input').value;
+      try {
+        const res = await API.matchShade(hex, 'WARM', 'DEWY');
+        if (res.matched_variants && res.matched_variants.length > 0) {
+          const top = res.matched_variants[0];
+          selectSwatch(top);
+        }
+      } catch (e) {
+        alert('Invalid Hex Code: ' + e.message);
+      }
+    }
+
+    function selectSwatch(variant) {
+      const banner = document.getElementById('match-banner');
+      document.getElementById('best-match-title').innerText = `Best Match: ${variant.shade_name}`;
+      document.getElementById('best-match-details').innerText = `Undertone: ${variant.shade_undertone} • Finish: ${variant.finish_type} • Confidence: ${variant.match_confidence_percentage || 98.4}% • $${variant.retail_price.toFixed(2)}`;
+      document.getElementById('btn-view-match-pdp').href = `pdp.html?variant_id=${variant.variant_id}`;
+      banner.style.display = 'block';
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

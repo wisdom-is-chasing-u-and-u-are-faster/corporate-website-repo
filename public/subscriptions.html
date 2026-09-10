@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Subscription & Regimen Portal — AURA LUXE</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="brand-title font-serif">AURA LUXE</a>
+    <nav>
+      <a href="index.html">Viral Drops</a>
+      <a href="shade-finder.html">Shade Matcher</a>
+      <a href="pdp.html">Serum Foundation</a>
+      <a href="cart.html">Cart</a>
+      <a href="subscriptions.html" class="active">My Regimens</a>
+    </nav>
+  </header>
+
+  <div class="container" style="max-width: 800px;">
+    <div style="margin-bottom: 2rem;">
+      <span class="badge-gold">Recurring Replenishment Portal</span>
+      <h1 class="font-serif" style="font-size: 2.25rem; margin-top: 0.5rem;">My Complexion Subscriptions</h1>
+      <p style="color: var(--color-text-muted);">Self-service replenishment management with automated 15% subscriber discount.</p>
+    </div>
+
+    <!-- Active Subscription Card -->
+    <div class="card" style="border: 2px solid var(--color-rose-gold);">
+      <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span class="badge-stock" style="margin-bottom: 0.5rem; display: inline-block;">● Active Subscription</span>
+          <h2 class="font-serif" style="font-size: 1.5rem;">Luminous Radiance Serum Foundation</h2>
+          <div id="sub-shade-text" style="color: var(--color-rose-gold); font-weight: 700; margin: 0.25rem 0;">
+            Current Shade: 230W Medium Honey Warm
+          </div>
+          <div style="font-size: 0.9rem; color: var(--color-text-muted);">
+            Cadence: Every 60 Days • Price: <span style="font-weight: 700; color: #111;">$40.80</span> (15% Off $48.00)
+          </div>
+          <div style="font-size: 0.9rem; color: var(--color-emerald); font-weight: 600; margin-top: 0.5rem;">
+            📅 Next Scheduled Shipment: <span id="sub-next-date">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--color-border); padding-top: 1.25rem;">
+        <button id="btn-skip-cycle" class="btn btn-outline" onclick="skipDelivery()">
+          ⏭️ Skip Next Delivery
+        </button>
+        <button id="btn-swap-shade" class="btn btn-rose" onclick="openSwapModal()">
+          🎨 Swap Foundation Shade
+        </button>
+      </div>
+    </div>
+
+    <!-- Swap Shade Modal Overlay -->
+    <div id="swap-modal" class="card" style="display: none; background: #FFF9FA; border-color: var(--color-rose-gold);">
+      <h3 class="font-serif" style="font-size: 1.25rem; margin-bottom: 0.5rem;">Select Your New Complexion Shade</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+        Swap your shade for seasonal changes without altering your billing schedule or 15% discount.
+      </p>
+
+      <div id="swap-swatches" class="swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));"></div>
+
+      <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+        <button id="btn-confirm-swap" class="btn btn-primary" onclick="confirmSwap()">Confirm Shade Swap</button>
+        <button class="btn btn-outline" onclick="closeSwapModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let subData = null;
+    let selectedSwapVariantId = null;
+
+    async function init() {
+      try {
+        subData = await API.getSubscription('7f918074-b5a8-4bb5-9e48-ec8d5e1281df');
+        document.getElementById('sub-next-date').innerText = subData.next_billing_date;
+        document.getElementById('sub-shade-text').innerText = `Current Shade: ${subData.shade_name}`;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function skipDelivery() {
+      try {
+        const res = await API.skipSubscription('7f918074-b5a8-4bb5-9e48-ec8d5e1281df');
+        document.getElementById('sub-next-date').innerText = res.next_billing_date;
+        alert('Delivery skipped! Your next scheduled shipment is ' + res.next_billing_date);
+      } catch (err) {
+        alert('Error skipping delivery: ' + err.message);
+      }
+    }
+
+    async function openSwapModal() {
+      const data = await API.listVariants();
+      const container = document.getElementById('swap-swatches');
+      container.innerHTML = '';
+
+      data.variants.forEach(v => {
+        const swatch = document.createElement('button');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = v.shade_hex_code;
+        swatch.title = v.shade_name;
+        swatch.onclick = () => {
+          document.querySelectorAll('#swap-swatches .swatch').forEach(s => s.classList.remove('selected'));
+          swatch.classList.add('selected');
+          selectedSwapVariantId = v.variant_id;
+        };
+        container.appendChild(swatch);
+      });
+
+      document.getElementById('swap-modal').style.display = 'block';
+    }
+
+    function closeSwapModal() {
+      document.getElementById('swap-modal').style.display = 'none';
+    }
+
+    async function confirmSwap() {
+      if (!selectedSwapVariantId) {
+        alert('Please select a new shade swatch');
+        return;
+      }
+      try {
+        const res = await API.swapSubscriptionShade('7f918074-b5a8-4bb5-9e48-ec8d5e1281df', selectedSwapVariantId);
+        document.getElementById('sub-shade-text').innerText = `Current Shade: ${res.shade_name}`;
+        closeSwapModal();
+        alert('Shade updated! ' + res.message);
+      } catch (err) {
+        alert('Error swapping shade: ' + err.message);
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
