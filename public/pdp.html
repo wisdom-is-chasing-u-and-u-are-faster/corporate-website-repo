@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luminous Radiance Serum Foundation — AURA LUXE</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="brand-title font-serif">AURA LUXE</a>
+    <nav>
+      <a href="index.html">Viral Drops</a>
+      <a href="shade-finder.html">Shade Matcher</a>
+      <a href="pdp.html" class="active">Serum Foundation</a>
+      <a href="cart.html">Cart</a>
+      <a href="subscriptions.html">My Regimens</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; align-items: start;">
+      <!-- Left: Media / Swatch Display -->
+      <div>
+        <div id="active-swatch-display" style="height: 380px; background: #c68642; border-radius: 16px; border: 3px solid var(--color-obsidian); box-shadow: 0 12px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+          <span class="badge-gold" style="align-self: flex-start; margin-bottom: 0.5rem;">50-Shade Formulation</span>
+          <h2 id="pdp-shade-title" class="font-serif" style="font-size: 1.75rem;">230W Medium Honey Warm</h2>
+          <div id="pdp-shade-hex" style="font-family: monospace; font-size: 1rem;">HEX #C68642</div>
+        </div>
+      </div>
+
+      <!-- Right: Purchase & Subscription Selector -->
+      <div class="card">
+        <span class="badge-gold">Bestselling Formulation</span>
+        <h1 class="font-serif" style="font-size: 2rem; margin: 0.5rem 0;">Luminous Radiance Serum Foundation</h1>
+        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
+          <span style="font-size: 1.5rem; font-weight: 700;">$48.00</span>
+          <span class="badge-stock">In Stock (1,500 Units)</span>
+        </div>
+
+        <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Skin-adaptive serum foundation with 24-hour hydration, breathable coverage, and photo-reflective mineral pigments.
+        </p>
+
+        <!-- Shade Swatch Palette -->
+        <label style="font-weight: 700; font-size: 0.9rem;">Select Shade (<span id="selected-shade-name">230W Medium Honey Warm</span>)</label>
+        <div id="pdp-swatches" class="swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Purchase Model Selector -->
+        <div style="margin: 1.5rem 0; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem;">
+          <label style="display: flex; gap: 0.75rem; align-items: center; cursor: pointer; margin-bottom: 0.75rem;">
+            <input type="radio" name="purchase_model" value="one_time" checked onchange="togglePurchaseModel(false)">
+            <div>
+              <div style="font-weight: 700;">One-Time Purchase ($48.00)</div>
+              <div style="font-size: 0.8rem; color: var(--color-text-muted);">Standard 3-5 business day delivery</div>
+            </div>
+          </label>
+
+          <label style="display: flex; gap: 0.75rem; align-items: center; cursor: pointer;">
+            <input type="radio" name="purchase_model" value="subscription" onchange="togglePurchaseModel(true)">
+            <div>
+              <div style="font-weight: 700; color: var(--color-rose-gold);">Auto-Replenish & Save 15% ($40.80)</div>
+              <div style="font-size: 0.8rem; color: var(--color-text-muted);">Cancel or skip delivery cadence anytime</div>
+            </div>
+          </label>
+
+          <div id="cadence-selector" style="margin-top: 1rem; display: none; padding-left: 1.75rem;">
+            <label style="font-size: 0.85rem; font-weight: 600;">Delivery Cadence</label>
+            <select id="sub-frequency" class="input-control" style="margin-top: 0.25rem;">
+              <option value="30">Every 30 Days (Daily User)</option>
+              <option value="45">Every 45 Days</option>
+              <option value="60" selected>Every 60 Days (Recommended)</option>
+              <option value="90">Every 90 Days</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Reservation CTA -->
+        <button id="btn-reserve-cart" class="btn btn-rose" style="width: 100%; font-size: 1.1rem; padding: 1rem;" onclick="reserveShade()">
+          ⚡ Reserve Shade (10-Min Lock)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let activeVariantId = 'd9b2d63d-a233-4f16-92f7-bc6024beee15';
+    let variants = [];
+
+    async function init() {
+      const data = await API.getProduct('luminous-radiance-serum-foundation');
+      variants = data.variants;
+
+      // Check query param
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('variant_id')) {
+        activeVariantId = urlParams.get('variant_id');
+      }
+
+      renderPDP();
+    }
+
+    function renderPDP() {
+      const container = document.getElementById('pdp-swatches');
+      container.innerHTML = '';
+
+      variants.forEach(v => {
+        const swatch = document.createElement('button');
+        swatch.className = 'swatch' + (v.variant_id === activeVariantId ? ' selected' : '');
+        swatch.style.backgroundColor = v.shade_hex_code;
+        swatch.title = v.shade_name;
+        swatch.onclick = () => selectPDPVariant(v);
+        container.appendChild(swatch);
+      });
+
+      const selected = variants.find(v => v.variant_id === activeVariantId) || variants[0];
+      updateDisplay(selected);
+    }
+
+    function selectPDPVariant(v) {
+      activeVariantId = v.variant_id;
+      renderPDP();
+    }
+
+    function updateDisplay(v) {
+      document.getElementById('active-swatch-display').style.backgroundColor = v.shade_hex_code;
+      document.getElementById('pdp-shade-title').innerText = v.shade_name;
+      document.getElementById('pdp-shade-hex').innerText = `HEX ${v.shade_hex_code.toUpperCase()}`;
+      document.getElementById('selected-shade-name').innerText = v.shade_name;
+    }
+
+    function togglePurchaseModel(isSub) {
+      document.getElementById('cadence-selector').style.display = isSub ? 'block' : 'none';
+    }
+
+    async function reserveShade() {
+      const isSub = document.querySelector('input[name="purchase_model"]:checked').value === 'subscription';
+      const freq = parseInt(document.getElementById('sub-frequency').value);
+      const sessionId = 'sess_' + Math.random().toString(36).substring(2, 10);
+
+      try {
+        const res = await API.reserveCart(sessionId, [{ variant_id: activeVariantId, quantity: 1 }]);
+        sessionStorage.setItem('active_reservation', JSON.stringify({
+          ...res,
+          is_sub: isSub,
+          freq: freq
+        }));
+        window.location.href = 'cart.html';
+      } catch (err) {
+        alert('Reservation error: ' + err.message);
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
